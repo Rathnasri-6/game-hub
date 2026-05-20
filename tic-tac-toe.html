@@ -5,7 +5,7 @@
   <style>
     body {
       font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: linear-gradient(135deg, #ffdde1, #ee9ca7, #a1c4fd, #c2e9fb);
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #a1c4fd, #c2e9fb);
       text-align: center;
       margin: 0;
       padding: 0;
@@ -21,6 +21,7 @@
       grid-gap: 15px;
       justify-content: center;
       margin-top: 30px;
+      position: relative;
     }
     .cell {
       width: 120px;
@@ -39,17 +40,45 @@
       transform: scale(1.1) rotate(-3deg);
       background: #ffcccb;
     }
-    #message {
-      margin-top: 20px;
-      font-size: 1.5em;
+    .X {
+      color: #2196F3; /* Bright Blue */
+      font-weight: bold;
+    }
+    .O {
+      color: #E91E63; /* Hot Pink */
+      font-weight: bold;
+    }
+    .line {
+      position: absolute;
+      height: 12px;
+      background: yellow;
+      border-radius: 6px;
+      box-shadow: 0 0 15px #ff0;
+      transform-origin: center;
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(45deg, #ff6a00, #ffcc00, #ff0099, #00dbde, #fc00ff);
       color: #fff;
+      padding: 20px 40px;
+      border-radius: 20px;
+      font-size: 2em;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+      animation: pop 0.5s ease;
+    }
+    @keyframes pop {
+      from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+      to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     }
     a {
       display: inline-block;
       margin-top: 20px;
       text-decoration: none;
       color: #fff;
-      background: linear-gradient(45deg, #ff6a00, #ffcc00, #ff0099, #00dbde, #fc00ff);
+      background: linear-gradient(45deg, #43cea2, #185a9d);
       padding: 10px 25px;
       border-radius: 30px;
       font-size: 1.1em;
@@ -61,43 +90,74 @@
   </style>
 </head>
 <body>
-  <h1>🎲 Tic Tac Toe 🎲</h1>
+  <h1>🌈 Tic Tac Toe 🌈</h1>
   <div class="board" id="board"></div>
-  <div id="message"></div>
   <a href="index.html">⬅ Back to Menu</a>
 
   <script>
     const board = document.getElementById("board");
-    const message = document.getElementById("message");
     let currentPlayer = "X";
     let cells = Array(9).fill(null);
 
+    const wins = [
+      [0,1,2],[3,4,5],[6,7,8], // rows
+      [0,3,6],[1,4,7],[2,5,8], // cols
+      [0,4,8],[2,4,6]          // diagonals
+    ];
+
+    function showPopup(text) {
+      const popup = document.createElement("div");
+      popup.className = "popup";
+      popup.textContent = text;
+      document.body.appendChild(popup);
+      setTimeout(() => popup.remove(), 2000);
+    }
+
     function checkWinner() {
-      const wins = [
-        [0,1,2],[3,4,5],[6,7,8],
-        [0,3,6],[1,4,7],[2,5,8],
-        [0,4,8],[2,4,6]
-      ];
       for (let combo of wins) {
         const [a,b,c] = combo;
         if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
+          drawLine(combo);
+          showPopup(cells[a] + " Wins!");
           return cells[a];
         }
       }
-      return cells.every(cell => cell) ? "Draw" : null;
+      if (cells.every(cell => cell)) {
+        showPopup("It's a Draw!");
+        return "Draw";
+      }
+      return null;
+    }
+
+    function drawLine(combo) {
+      const positions = combo.map(i => board.children[i].getBoundingClientRect());
+      const boardRect = board.getBoundingClientRect();
+      const x1 = positions[0].left + positions[0].width/2 - boardRect.left;
+      const y1 = positions[0].top + positions[0].height/2 - boardRect.top;
+      const x2 = positions[2].left + positions[2].width/2 - boardRect.left;
+      const y2 = positions[2].top + positions[2].height/2 - boardRect.top;
+
+      const line = document.createElement("div");
+      line.className = "line";
+      const length = Math.sqrt((x2-x1)**2 + (y2-y1)**2);
+      line.style.width = length + "px";
+      line.style.left = (x1 + x2)/2 - length/2 + "px";
+      line.style.top = (y1 + y2)/2 + "px";
+      const angle = Math.atan2(y2-y1, x2-x1) * 180/Math.PI;
+      line.style.transform = `rotate(${angle}deg)`;
+      board.appendChild(line);
     }
 
     function handleClick(i, cell) {
       if (!cells[i]) {
         cells[i] = currentPlayer;
         cell.textContent = currentPlayer;
+        cell.classList.add(currentPlayer);
         const winner = checkWinner();
-        if (winner) {
-          message.textContent = winner === "Draw" ? "It's a Draw!" : winner + " Wins!";
-          board.querySelectorAll(".cell").forEach(c => c.style.pointerEvents = "none");
-        } else {
+        if (!winner) {
           currentPlayer = currentPlayer === "X" ? "O" : "X";
-          message.textContent = "Player " + currentPlayer + "'s turn";
+        } else {
+          board.querySelectorAll(".cell").forEach(c => c.style.pointerEvents = "none");
         }
       }
     }
@@ -108,7 +168,6 @@
       cell.addEventListener("click", () => handleClick(i, cell));
       board.appendChild(cell);
     }
-    message.textContent = "Player X's turn";
   </script>
 </body>
 </html>
