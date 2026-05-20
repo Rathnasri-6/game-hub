@@ -5,7 +5,8 @@
   <style>
     body {
       font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: #fefefe;
+      background: radial-gradient(circle, #fff 20%, #f0f0f0 20%);
+      background-size: 25px 25px;
       text-align: center;
       margin: 0;
       padding: 0;
@@ -80,17 +81,18 @@
       box-shadow: 4px 4px 0 #000;
     }
     .popup button:hover { background: #1976D2; }
-    .confetti {
+    .blast {
       position: fixed;
-      width: 10px;
-      height: 10px;
-      background: red;
-      animation: fall 3s linear forwards;
+      font-size: 3em;
+      font-weight: bold;
+      color: red;
+      animation: explode 1s ease forwards;
       z-index: 999;
     }
-    @keyframes fall {
-      0% {transform: translateY(-100vh);}
-      100% {transform: translateY(100vh);}
+    @keyframes explode {
+      0% {transform: scale(0.5) rotate(0deg); opacity: 0;}
+      50% {transform: scale(1.5) rotate(20deg); opacity: 1;}
+      100% {transform: scale(0) rotate(-20deg); opacity: 0;}
     }
     a {
       display: inline-block;
@@ -129,76 +131,12 @@
       popup.className = "popup";
       popup.innerHTML = text + "<br><button onclick='location.reload()'>Play Again</button>";
       document.body.appendChild(popup);
-      launchConfetti();
+      launchBlast("💥 BOOM!");
+      launchBlast("🏆 WIN!");
     }
 
-    function launchConfetti() {
-      for (let i = 0; i < 50; i++) {
-        const confetti = document.createElement("div");
-        confetti.className = "confetti";
-        confetti.style.left = Math.random() * window.innerWidth + "px";
-        confetti.style.background = `hsl(${Math.random()*360},100%,50%)`;
-        confetti.style.animationDuration = (Math.random()*2+2) + "s";
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 3000);
-      }
-    }
-
-    function checkWinner() {
-      for (let combo of wins) {
-        const [a,b,c] = combo;
-        if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
-          drawLine(combo);
-          showPopup(cells[a] + " Wins!");
-          return cells[a];
-        }
-      }
-      if (cells.every(cell => cell)) {
-        showPopup("It's a Draw!");
-        return "Draw";
-      }
-      return null;
-    }
-
-    function drawLine(combo) {
-      const positions = combo.map(i => board.children[i].getBoundingClientRect());
-      const boardRect = board.getBoundingClientRect();
-      const x1 = positions[0].left + positions[0].width/2 - boardRect.left;
-      const y1 = positions[0].top + positions[0].height/2 - boardRect.top;
-      const x2 = positions[2].left + positions[2].width/2 - boardRect.left;
-      const y2 = positions[2].top + positions[2].height/2 - boardRect.top;
-
-      const line = document.createElement("div");
-      line.className = "line";
-      const length = Math.sqrt((x2-x1)**2 + (y2-y1)**2);
-      line.style.width = length + "px";
-      line.style.left = (x1 + x2)/2 - length/2 + "px";
-      line.style.top = (y1 + y2)/2 + "px";
-      const angle = Math.atan2(y2-y1, x2-x1) * 180/Math.PI;
-      line.style.transform = `rotate(${angle}deg)`;
-      board.appendChild(line);
-    }
-
-    function handleClick(i, cell) {
-      if (!cells[i]) {
-        cells[i] = currentPlayer;
-        cell.textContent = currentPlayer;
-        cell.classList.add(currentPlayer);
-        const winner = checkWinner();
-        if (!winner) {
-          currentPlayer = currentPlayer === "X" ? "O" : "X";
-        } else {
-          board.querySelectorAll(".cell").forEach(c => c.style.pointerEvents = "none");
-        }
-      }
-    }
-
-    for (let i = 0; i < 9; i++) {
-      const cell = document.createElement("div");
-      cell.className = "cell";
-      cell.addEventListener("click", () => handleClick(i, cell));
-      board.appendChild(cell);
-    }
-  </script>
-</body>
-</html>
+    function launchBlast(text) {
+      const blast = document.createElement("div");
+      blast.className = "blast";
+      blast.textContent = text;
+      blast.style.left = Math.random() * window.innerWidth + "px";
