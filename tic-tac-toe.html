@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tic Tac Toe</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7, #a1c4fd, #c2e9fb);
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      color: #fff;
+      text-shadow: 3px 3px 8px #000;
+      padding: 20px;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 120px);
+      grid-gap: 15px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+    .cell {
+      width: 120px;
+      height: 120px;
+      background: #fff;
+      font-size: 2.5em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      transition: transform 0.3s, background 0.3s;
+    }
+    .cell:hover {
+      transform: scale(1.1) rotate(-3deg);
+      background: #ffcccb;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 1.5em;
+      color: #fff;
+    }
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #fff;
+      background: linear-gradient(45deg, #ff6a00, #ffcc00, #ff0099, #00dbde, #fc00ff);
+      padding: 10px 25px;
+      border-radius: 30px;
+      font-size: 1.1em;
+      transition: transform 0.3s;
+    }
+    a:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>🎲 Tic Tac Toe 🎲</h1>
+  <div class="board" id="board"></div>
+  <div id="message"></div>
+  <a href="index.html">⬅ Back to Menu</a>
+
+  <script>
+    const board = document.getElementById("board");
+    const message = document.getElementById("message");
+    let currentPlayer = "X";
+    let cells = Array(9).fill(null);
+
+    function checkWinner() {
+      const wins = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      for (let combo of wins) {
+        const [a,b,c] = combo;
+        if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
+          return cells[a];
+        }
+      }
+      return cells.every(cell => cell) ? "Draw" : null;
+    }
+
+    function handleClick(i, cell) {
+      if (!cells[i]) {
+        cells[i] = currentPlayer;
+        cell.textContent = currentPlayer;
+        const winner = checkWinner();
+        if (winner) {
+          message.textContent = winner === "Draw" ? "It's a Draw!" : winner + " Wins!";
+          board.querySelectorAll(".cell").forEach(c => c.style.pointerEvents = "none");
+        } else {
+          currentPlayer = currentPlayer === "X" ? "O" : "X";
+          message.textContent = "Player " + currentPlayer + "'s turn";
+        }
+      }
+    }
+
+    for (let i = 0; i < 9; i++) {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      cell.addEventListener("click", () => handleClick(i, cell));
+      board.appendChild(cell);
+    }
+    message.textContent = "Player X's turn";
+  </script>
+</body>
+</html>
