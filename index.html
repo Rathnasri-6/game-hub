@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Rathnasri's Fun Game Hub</title>
+  <title>Rathnasri's Ultimate Game Hub</title>
   <style>
     body {
       font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: linear-gradient(135deg, #ffdde1, #ee9ca7, #a1c4fd, #c2e9fb, #fbc2eb, #fad0c4);
-      background-size: 400% 400%;
-      animation: gradientBG 12s ease infinite;
+      background: linear-gradient(270deg, #ff6a00, #ffcc00, #ff0099, #00dbde, #fc00ff);
+      background-size: 1000% 1000%;
+      animation: rainbowBG 20s ease infinite;
       text-align: center;
       margin: 0;
       padding: 0;
+      overflow-x: hidden;
     }
-    @keyframes gradientBG {
+    @keyframes rainbowBG {
       0% {background-position: 0% 50%;}
       50% {background-position: 100% 50%;}
       100% {background-position: 0% 50%;}
     }
     h1 {
       color: #fff;
-      font-size: 3em;
+      font-size: 3.5em;
       padding: 20px;
-      text-shadow: 3px 3px 8px #000;
-      animation: bounce 2s infinite;
+      text-shadow: 0 0 15px #ff00ff, 0 0 30px #00ffff;
+      animation: glow 2s ease-in-out infinite alternate;
     }
-    @keyframes bounce {
-      0%, 100% {transform: translateY(0);}
-      50% {transform: translateY(-10px);}
+    @keyframes glow {
+      from {text-shadow: 0 0 10px #ff00ff;}
+      to {text-shadow: 0 0 30px #00ffff;}
     }
     p {
       color: #fff;
@@ -46,23 +47,37 @@
       color: #fff;
       background: linear-gradient(45deg, #ff6a00, #ffcc00, #ff0099, #00dbde, #fc00ff);
       background-size: 300% 300%;
-      padding: 15px 40px;
+      padding: 18px 50px;
       border-radius: 50px;
-      font-size: 1.3em;
+      font-size: 1.4em;
       font-weight: bold;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
       transition: transform 0.4s, background-position 0.4s;
       display: inline-block;
+      position: relative;
     }
     a:hover {
-      transform: rotate(-5deg) scale(1.1);
+      transform: scale(1.2) rotate(-5deg);
       background-position: right center;
+      box-shadow: 0 0 25px #fff, 0 0 50px #ff00ff;
+    }
+    /* Confetti effect */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: red;
+      animation: fall 3s linear infinite;
+    }
+    @keyframes fall {
+      0% {transform: translateY(-100vh);}
+      100% {transform: translateY(100vh);}
     }
   </style>
 </head>
 <body>
-  <h1>🌈 Rathnasri's Fun Game Hub 🎮</h1>
-  <p>Pick your favorite game and start playing!</p>
+  <h1>🎡 Rathnasri's Ultimate Game Hub 🎮</h1>
+  <p>Choose your adventure and let’s play!</p>
   <ul>
     <li><a href="tic-tac-toe.html">🎲 Play Tic Tac Toe</a></li>
     <li><a href="memory.html">🃏 Play Memory Card</a></li>
@@ -70,5 +85,17 @@
     <li><a href="2048.html">🔢 Play 2048</a></li>
     <li><a href="sudoku.html">🧩 Play Sudoku</a></li>
   </ul>
+
+  <script>
+    // Confetti burst on page load
+    for (let i = 0; i < 50; i++) {
+      const confetti = document.createElement("div");
+      confetti.className = "confetti";
+      confetti.style.left = Math.random() * window.innerWidth + "px";
+      confetti.style.background = `hsl(${Math.random()*360},100%,50%)`;
+      confetti.style.animationDuration = (Math.random()*3+2) + "s";
+      document.body.appendChild(confetti);
+    }
+  </script>
 </body>
 </html>
