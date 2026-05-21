@@ -5,36 +5,53 @@
   <style>
     body {
       font-family: 'Comic Sans MS', cursive, sans-serif;
-      background: linear-gradient(135deg, #dbe6f6, #c5796d);
+      background: linear-gradient(135deg, #fdfbfb, #ebedee); /* soft gradient */
       margin: 0; padding: 0; text-align: center;
       animation: fadeIn 1s ease;
     }
     @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-    h1 { font-size: 3em; color: #222; margin-top: 30px; }
+
+    h1 {
+      font-size: 3em; color: #333; margin-top: 30px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+      animation: slideDown 1s ease;
+    }
+    @keyframes slideDown { from {transform: translateY(-50px); opacity:0;} to {transform: translateY(0); opacity:1;} }
+
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 25px; padding: 40px; max-width: 1000px; margin: auto;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 30px; padding: 40px; max-width: 1000px; margin: auto;
     }
+
     .card {
-      background: #fff; border-radius: 15px; padding: 20px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-      transition: transform 0.3s, box-shadow 0.3s;
+      background: #fff;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      transition: transform 0.4s, box-shadow 0.4s;
       cursor: pointer;
+      animation: popIn 0.8s ease;
     }
+    @keyframes popIn { from {transform: scale(0.8); opacity:0;} to {transform: scale(1); opacity:1;} }
+
     .card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+      transform: translateY(-12px) scale(1.05);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
     }
+
+    .emoji { font-size: 3em; }
     .card a {
       text-decoration: none; color: #333;
-      font-size: 1.3em; font-weight: bold; display: block; margin-top: 10px;
+      font-size: 1.4em; font-weight: bold;
+      display: block; margin-top: 15px;
+      transition: color 0.3s;
     }
-    .emoji { font-size: 3em; }
+    .card a:hover { color: #2196F3; }
   </style>
 </head>
 <body>
-  <h1>Rathnasri's Game Hub</h1>
+  <h1>⚔️ Rathnasri's Game Hub ⚔️</h1>
   <div class="grid">
     <div class="card"><div class="emoji">🎲</div><a href="tic-tac-toe.html">Play Tic Tac Toe</a></div>
     <div class="card"><div class="emoji">🃏</div><a href="memory.html">Play Memory Card</a></div>
